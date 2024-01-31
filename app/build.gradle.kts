@@ -86,6 +86,6 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
 
     //Icons
-    implementation ("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation ("androidx.compose.material:material-icons-extended:1.6.0")
 
 }

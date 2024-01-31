@@ -12,6 +12,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -20,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Session
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
+import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.AddSubjectDialog
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.AddSubjectSection
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.CountCardSection
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.sessionList
@@ -96,6 +101,33 @@ fun DashboardScreen() {
         )
     )
 
+    var isAddSubjectDialog by remember {
+        mutableStateOf(false)
+    }
+    var subject by remember {
+        mutableStateOf("")
+    }
+    var goalHour by remember {
+        mutableStateOf("")
+    }
+    var selectedColor by remember {
+        mutableStateOf(Subject.subjectCardColor.random())
+    }
+
+    AddSubjectDialog(
+        isDialogOpen = isAddSubjectDialog,
+        onDismissRequest = { isAddSubjectDialog = false },
+        onConfirmButtonClick = {
+            isAddSubjectDialog = false
+        },
+        subjectName = subject,
+        onSubjectNameChange = { subject = it },
+        goalHour = goalHour,
+        onGoalHourChange = { goalHour = it },
+        selectedColor = selectedColor,
+        onColorChange = { selectedColor = it }
+    )
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(title = {
@@ -124,7 +156,7 @@ fun DashboardScreen() {
                AddSubjectSection(
                    modifier = Modifier.fillMaxWidth(),
                    subjectList = subjects,
-                   addButtonClick = {  }
+                   addButtonClick = { isAddSubjectDialog = true }
                )
             }
             
