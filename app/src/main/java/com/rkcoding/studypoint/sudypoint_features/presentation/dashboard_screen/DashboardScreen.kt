@@ -27,6 +27,7 @@ import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.AddSubjectDialog
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.AddSubjectSection
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.CountCardSection
+import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.DeleteDialog
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.sessionList
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.taskList
 import com.rkcoding.studypoint.ui.theme.DarkBlue
@@ -113,6 +114,20 @@ fun DashboardScreen() {
     var selectedColor by remember {
         mutableStateOf(Subject.subjectCardColor.random())
     }
+    var deleteDialog by remember {
+        mutableStateOf(false)
+    }
+
+    DeleteDialog(
+        isDialogOpen = deleteDialog,
+        bodyText = "Are you sure, You want to delete this Session? Your studies hour will be reduce"
+                + "by this session time. This action can not be under",
+        onDismissRequest = { deleteDialog = false },
+        onConfirmButtonClick = {
+            deleteDialog = false
+        },
+        title = "Delete Session?"
+    )
 
     AddSubjectDialog(
         isDialogOpen = isAddSubjectDialog,
@@ -188,7 +203,7 @@ fun DashboardScreen() {
             sessionList(
                 sectionTitle = "Recent Study Sessions",
                 session = session,
-                onDeleteIconClick = {  },
+                onDeleteIconClick = { deleteDialog = true },
                 onCardClick = {  }
             )
 

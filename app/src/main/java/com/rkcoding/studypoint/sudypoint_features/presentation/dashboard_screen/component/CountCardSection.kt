@@ -70,7 +70,7 @@ fun CountCard(
         ) {
             Text(
                 text = headlineText,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(10.dp))

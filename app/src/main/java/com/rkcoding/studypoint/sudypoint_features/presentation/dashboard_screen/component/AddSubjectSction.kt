@@ -122,15 +122,20 @@ fun SubjectCard(
             },
         contentAlignment = Alignment.Center
     ){
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Image(
                 painter = painterResource(id = R.drawable.books),
                 contentDescription = "Books",
                 modifier = Modifier.size(80.dp)
             )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
             Text(
                 text = subjectName,
-                fontSize = 24.sp,
+                fontSize = 18.sp,
                 color = Color.White
             )
         }
