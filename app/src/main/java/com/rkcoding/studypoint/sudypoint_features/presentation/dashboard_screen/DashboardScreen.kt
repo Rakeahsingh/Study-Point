@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.rkcoding.studypoint.core.navigation.Screen
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Session
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
@@ -34,7 +36,9 @@ import com.rkcoding.studypoint.ui.theme.DarkBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(
+    navController: NavController
+) {
 
     val subjects = listOf(
         Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0], subjectId = 0),
@@ -171,7 +175,8 @@ fun DashboardScreen() {
                AddSubjectSection(
                    modifier = Modifier.fillMaxWidth(),
                    subjectList = subjects,
-                   addButtonClick = { isAddSubjectDialog = true }
+                   addButtonClick = { isAddSubjectDialog = true },
+                   subjectCardClick = { navController.navigate(Screen.SubjectScreen.route) }
                )
             }
             
@@ -214,8 +219,3 @@ fun DashboardScreen() {
 }
 
 
-@Preview
-@Composable
-fun Preview() {
-    DashboardScreen()
-}

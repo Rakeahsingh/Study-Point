@@ -37,7 +37,8 @@ import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 fun AddSubjectSection(
     modifier: Modifier = Modifier,
     subjectList: List<Subject>,
-    addButtonClick: () -> Unit
+    addButtonClick: () -> Unit,
+    subjectCardClick: (Subject) -> Unit
 ) {
 
     Column(modifier = modifier) {
@@ -92,7 +93,7 @@ fun AddSubjectSection(
                SubjectCard(
                    subjectName = subject.name,
                    backgroundColor = subject.color,
-                   onCardClick = {  }
+                   onCardClick = { subjectCardClick(subject) }
                )
            }
         }

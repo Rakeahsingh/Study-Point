@@ -1,5 +1,7 @@
 package com.rkcoding.studypoint.sudypoint_features.presentation.task_screen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,9 +33,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,14 +47,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.rkcoding.studypoint.core.utils.toDateFormat
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Priority
+import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.DeleteDialog
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.TaskCheckBox
+import com.rkcoding.studypoint.sudypoint_features.presentation.task_screen.component.SubjectListBottomSheet
+import com.rkcoding.studypoint.sudypoint_features.presentation.task_screen.component.TaskDatePicker
 import com.rkcoding.studypoint.ui.theme.CustomBlue
+import kotlinx.coroutines.launch
+import java.time.Instant
 
+@RequiresApi(Build.VERSION_CODES.O)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TaskScreen() {
 
+    val subjects = listOf(
+        Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0], subjectId = 0),
+        Subject(name = "Hindi", goalHours = 10f, color = Subject.subjectCardColor[1], subjectId = 1),
+        Subject(name = "Maths", goalHours = 5f, color = Subject.subjectCardColor[2], subjectId = 2),
+        Subject(name = "Science", goalHours = 25f, color = Subject.subjectCardColor[3], subjectId = 3),
+        Subject(name = "Computer", goalHours = 35f, color = Subject.subjectCardColor[4], subjectId = 4),
+        Subject(name = "Social Science", goalHours = 18f, color = Subject.subjectCardColor[0], subjectId = 5),
+    )
+
+    val scope = rememberCoroutineScope()
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var isTitleError by rememberSaveable { mutableStateOf<String?>(null) }
@@ -71,6 +94,14 @@ fun TaskScreen() {
 
     var deleteDialogOpen by remember { mutableStateOf(false) }
 
+    var datePickerDialogOpen by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = Instant.now().toEpochMilli()
+    )
+
+    var bottomSheetOpen by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
+
     DeleteDialog(
         isDialogOpen = deleteDialogOpen,
         bodyText = "Are you sure you want to Delete Tasks?" + "This action can't be undone",
@@ -79,6 +110,27 @@ fun TaskScreen() {
         onConfirmButtonClick = {
             deleteDialogOpen = false
                                }
+    )
+
+    TaskDatePicker(
+        state = datePickerState,
+        isOpen = datePickerDialogOpen,
+        onDismissRequest = { datePickerDialogOpen = false },
+        onConfirmButtonClick = {
+            datePickerDialogOpen = false
+        }
+    )
+
+    SubjectListBottomSheet(
+        state = sheetState,
+        isOpen = bottomSheetOpen,
+        onDismissRequest = { bottomSheetOpen = false },
+        subject = subjects,
+        onSubjectClick = {
+            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                if (!sheetState.isVisible) bottomSheetOpen = false
+            }
+        }
     )
 
     Scaffold(
@@ -141,12 +193,12 @@ fun TaskScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "1 FEb, 2024",
+                    text = datePickerState.selectedDateMillis.toDateFormat(),
                     style = MaterialTheme.typography.bodyLarge,
                     fontStyle = FontStyle.Italic
                 )
 
-                IconButton(onClick = { /*TODO*/ }
+                IconButton(onClick = { datePickerDialogOpen = true }
                 ) {
                     Icon(
                         imageVector = Icons.Default.DateRange,
@@ -187,11 +239,11 @@ fun TaskScreen() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "English",
+                    text = sheetState.currentValue.name,
                     style = MaterialTheme.typography.bodyLarge
                 )
 
-                IconButton(onClick = { /*TODO*/ }
+                IconButton(onClick = { bottomSheetOpen = true }
                 ) {
                     Icon(
                         imageVector = Icons.Default.ArrowDropDown,
@@ -294,8 +346,8 @@ fun PriorityButton(
 }
 
 
-@Preview
-@Composable
-fun Pre() {
-    TaskScreen()
-}
+//@Preview
+//@Composable
+//fun Pre() {
+//    TaskScreen()
+//}
