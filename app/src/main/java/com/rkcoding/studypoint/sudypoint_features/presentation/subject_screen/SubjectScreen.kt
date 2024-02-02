@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import com.rkcoding.studypoint.core.navigation.Screen
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Session
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
@@ -41,7 +43,10 @@ import com.rkcoding.studypoint.sudypoint_features.presentation.subject_screen.co
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SubjectScreen() {
+fun SubjectScreen(
+    subjects: Int,
+    navController: NavController
+) {
 
     val tasks = listOf(
         Task(
@@ -151,7 +156,7 @@ fun SubjectScreen() {
         topBar = {
             TopAppBar(
                 title = "English",
-                onBackButtonClick = { /*TODO*/ },
+                onBackButtonClick = { navController.popBackStack() },
                 onDeleteButtonClick = { deleteSubjectDialog = true },
                 onEditButtonClick = { isAddSubjectDialog = true },
                 scrollBehavior = scrollBehavior
@@ -159,7 +164,7 @@ fun SubjectScreen() {
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate(Screen.TaskScreen.route) },
                 icon = { Icon(imageVector = Icons.Default.Add, contentDescription = "Add tasks")},
                 text = { Text(text = "Add Tasks") },
                 expanded = isFabExtended
@@ -261,8 +266,3 @@ fun TopAppBar(
 }
 
 
-@Preview
-@Composable
-fun Preview() {
-    SubjectScreen()
-}

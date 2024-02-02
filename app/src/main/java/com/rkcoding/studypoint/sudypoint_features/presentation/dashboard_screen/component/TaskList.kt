@@ -34,7 +34,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rkcoding.studypoint.R
-import com.rkcoding.studypoint.sudypoint_features.domain.model.Priority
+import com.rkcoding.studypoint.core.utils.Priority
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
 
 

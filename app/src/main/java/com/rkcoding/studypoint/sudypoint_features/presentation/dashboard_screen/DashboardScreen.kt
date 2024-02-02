@@ -40,6 +40,7 @@ fun DashboardScreen(
     navController: NavController
 ) {
 
+
     val subjects = listOf(
         Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0], subjectId = 0),
         Subject(name = "Hindi", goalHours = 10f, color = Subject.subjectCardColor[1], subjectId = 1),
@@ -176,13 +177,17 @@ fun DashboardScreen(
                    modifier = Modifier.fillMaxWidth(),
                    subjectList = subjects,
                    addButtonClick = { isAddSubjectDialog = true },
-                   subjectCardClick = { navController.navigate(Screen.SubjectScreen.route) }
+                   subjectCardClick = { subject ->
+                       navController.navigate(
+                           Screen.SubjectScreen.route + "?subjectId=${subject.subjectId}"
+                       )
+                   }
                )
             }
             
             item{
                 Button(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate(Screen.SessionScreen.route) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 48.dp, vertical = 24.dp),
@@ -201,7 +206,7 @@ fun DashboardScreen(
             taskList(
                 sectionTitle = "Upcoming Tasks",
                 task = tasks,
-                onTaskCardClick = {  },
+                onTaskCardClick = { navController.navigate(Screen.TaskScreen.route) },
                 onTaskCheckBoxClick = {  }
             )
 
@@ -209,7 +214,7 @@ fun DashboardScreen(
                 sectionTitle = "Recent Study Sessions",
                 session = session,
                 onDeleteIconClick = { deleteDialog = true },
-                onCardClick = {  }
+                onCardClick = { navController.navigate(Screen.SessionScreen.route) }
             )
 
         }

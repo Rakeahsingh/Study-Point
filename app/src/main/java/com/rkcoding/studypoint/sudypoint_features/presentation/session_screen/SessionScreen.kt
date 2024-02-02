@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Session
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.DeleteDialog
@@ -45,7 +46,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SessionScreen() {
+fun SessionScreen(
+    navController: NavController
+) {
 
     val session = listOf(
         Session(
@@ -113,7 +116,7 @@ fun SessionScreen() {
         topBar = {
             SessionTopAppBar(
                 title = "Study Session",
-                onBackButtonClick = { /*TODO*/ },
+                onBackButtonClick = { navController.popBackStack() },
                 scrollBehavior = scrollBehavior
             )
         }
@@ -229,8 +232,3 @@ fun RelatedToSubject(
 }
 
 
-@Preview
-@Composable
-fun Com() {
-    SessionScreen()
-}

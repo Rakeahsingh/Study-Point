@@ -45,10 +45,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.rkcoding.studypoint.core.utils.Priority
 import com.rkcoding.studypoint.core.utils.toDateFormat
-import com.rkcoding.studypoint.sudypoint_features.domain.model.Priority
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.DeleteDialog
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.TaskCheckBox
@@ -61,7 +61,9 @@ import java.time.Instant
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TaskScreen() {
+fun TaskScreen(
+    navController: NavController
+) {
 
     val subjects = listOf(
         Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0], subjectId = 0),
@@ -142,7 +144,7 @@ fun TaskScreen() {
                 onDeleteButtonClick = {
                     deleteDialogOpen = true
                 },
-                onBackButtonCLick = { /*TODO*/ },
+                onBackButtonCLick = { navController.popBackStack() },
                 onCheckBoxClick = {  }
             )
         }
