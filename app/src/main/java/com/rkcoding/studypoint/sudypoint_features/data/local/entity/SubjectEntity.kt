@@ -13,7 +13,7 @@ import com.rkcoding.studypoint.ui.theme.gradient5
 data class SubjectEntity(
     val name: String,
     val goalHours: Float,
-    val color: List<Color>,
+    val color: List<Int>,
     @PrimaryKey(autoGenerate = true)
     val subjectId: Int? = null
 )

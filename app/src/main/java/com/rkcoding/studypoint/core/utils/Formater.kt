@@ -6,6 +6,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.time.Duration.Companion.hours
 
 @RequiresApi(Build.VERSION_CODES.O)
 fun Long?.toDateFormat(): String{
@@ -17,4 +18,10 @@ fun Long?.toDateFormat(): String{
     } ?: LocalDate.now()
 
     return date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
+}
+
+
+fun Long.toHour(): Float{
+    val hours = this.toFloat() / 3600f
+    return "%.2f".format(hours).toFloat()
 }

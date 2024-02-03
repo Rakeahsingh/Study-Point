@@ -12,7 +12,7 @@ data class Task(
     val relatedToSubject: String,
     val isCompleted: Boolean,
     val taskSubjectId: Int,
-    val taskId: Int
+    val taskId: Int? = null
 )
 
 

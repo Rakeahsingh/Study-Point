@@ -41,7 +41,7 @@ fun LazyListScope.sessionList(
         Text(
             text = sectionTitle,
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(start = 10.dp, top = 16.dp, bottom = 10.dp)
         )
     }
 
@@ -77,7 +77,7 @@ fun LazyListScope.sessionList(
         SessionCardSection(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 4.dp),
+                .padding(horizontal = 10.dp, vertical = 4.dp),
             session = sessions,
             onCardClick = { onCardClick(sessions.sessionId) },
             onDeleteIconClick = { onDeleteIconClick(sessions) }

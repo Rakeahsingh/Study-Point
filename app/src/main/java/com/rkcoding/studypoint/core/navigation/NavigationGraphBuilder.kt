@@ -2,8 +2,12 @@ package com.rkcoding.studypoint.core.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseInBounce
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.scaleIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
@@ -34,22 +38,35 @@ fun NavigationGraphBuilder() {
         }
 
         composable(
-            route = Screen.SubjectScreen.route + "?subjectId={subjectID}",
+            route = Screen.SubjectScreen.route + "?subjectId={subjectId}",
             arguments = listOf(
                 navArgument("subjectId"){
                     type = NavType.IntType
+                    defaultValue = -1
                 }
             ),
             enterTransition = {
-                slideInVertically(
-                    initialOffsetY = { -it },
-                    animationSpec = tween(500, easing = LinearOutSlowInEasing)
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(900)
                 )
             },
             exitTransition = {
-                slideOutVertically(
-                    targetOffsetY = { -it },
-                    animationSpec = tween(500, easing = LinearOutSlowInEasing)
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(900)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(900)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(900)
                 )
             }
         ){
@@ -63,15 +80,27 @@ fun NavigationGraphBuilder() {
         composable(
             route = Screen.TaskScreen.route,
             enterTransition = {
-                slideInVertically(
-                    initialOffsetY = { -it },
-                    animationSpec = tween(500, easing = LinearOutSlowInEasing)
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Down,
+                    animationSpec = tween(900)
                 )
             },
             exitTransition = {
-                slideOutVertically(
-                    targetOffsetY = { -it },
-                    animationSpec = tween(500, easing = LinearOutSlowInEasing)
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Down,
+                    animationSpec = tween(900)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Up,
+                    animationSpec = tween(900)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Up,
+                    animationSpec = tween(900)
                 )
             }
         ){
@@ -81,15 +110,27 @@ fun NavigationGraphBuilder() {
         composable(
             route = Screen.SessionScreen.route,
             enterTransition = {
-                slideInVertically(
-                    initialOffsetY = { -it },
-                    animationSpec = tween(500, easing = LinearOutSlowInEasing)
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(900)
                 )
             },
             exitTransition = {
-                slideOutVertically(
-                    targetOffsetY = { -it },
-                    animationSpec = tween(500, easing = LinearOutSlowInEasing)
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Left,
+                    animationSpec = tween(900)
+                )
+            },
+            popEnterTransition = {
+                slideIntoContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(900)
+                )
+            },
+            popExitTransition = {
+                slideOutOfContainer(
+                    AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(900)
                 )
             }
         ){

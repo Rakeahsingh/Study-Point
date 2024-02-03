@@ -30,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColor
 import com.rkcoding.studypoint.R
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 
@@ -92,7 +93,7 @@ fun AddSubjectSection(
            items(subjectList){ subject ->
                SubjectCard(
                    subjectName = subject.name,
-                   backgroundColor = subject.color,
+                   backgroundColor = subject.color.map { Color(it) },
                    onCardClick = { subjectCardClick(subject) }
                )
            }

@@ -10,8 +10,8 @@ import com.rkcoding.studypoint.ui.theme.gradient5
 data class Subject(
     val name: String,
     val goalHours: Float,
-    val color: List<Color>,
-    val subjectId: Int
+    val color: List<Int>,
+    val subjectId: Int? = null
 ){
 
     companion object{

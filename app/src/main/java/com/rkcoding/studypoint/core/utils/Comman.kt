@@ -1,5 +1,6 @@
 package com.rkcoding.studypoint.core.utils
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.ui.graphics.Color
 import com.rkcoding.studypoint.ui.theme.CustomGreen
 import com.rkcoding.studypoint.ui.theme.Orange
@@ -14,3 +15,14 @@ enum class Priority(val title: String, val color: Color, val value: Int){
     }
 
 }
+
+
+sealed class ShowSnackBarEvent(){
+
+    data class ShowSnakeBar(
+        val message: String,
+        val duration: SnackbarDuration = SnackbarDuration.Short
+    ): ShowSnackBarEvent()
+
+}
+

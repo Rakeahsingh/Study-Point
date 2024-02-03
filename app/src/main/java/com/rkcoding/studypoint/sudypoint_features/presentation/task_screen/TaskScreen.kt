@@ -44,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -66,12 +67,12 @@ fun TaskScreen(
 ) {
 
     val subjects = listOf(
-        Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0], subjectId = 0),
-        Subject(name = "Hindi", goalHours = 10f, color = Subject.subjectCardColor[1], subjectId = 1),
-        Subject(name = "Maths", goalHours = 5f, color = Subject.subjectCardColor[2], subjectId = 2),
-        Subject(name = "Science", goalHours = 25f, color = Subject.subjectCardColor[3], subjectId = 3),
-        Subject(name = "Computer", goalHours = 35f, color = Subject.subjectCardColor[4], subjectId = 4),
-        Subject(name = "Social Science", goalHours = 18f, color = Subject.subjectCardColor[0], subjectId = 5),
+        Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0].map { it.toArgb() }, subjectId = 0),
+        Subject(name = "Hindi", goalHours = 10f, color = Subject.subjectCardColor[1].map { it.toArgb() }, subjectId = 1),
+        Subject(name = "Maths", goalHours = 5f, color = Subject.subjectCardColor[2].map { it.toArgb() }, subjectId = 2),
+        Subject(name = "Science", goalHours = 25f, color = Subject.subjectCardColor[3].map { it.toArgb() }, subjectId = 3),
+        Subject(name = "Computer", goalHours = 35f, color = Subject.subjectCardColor[4].map { it.toArgb() }, subjectId = 4),
+        Subject(name = "Social Science", goalHours = 18f, color = Subject.subjectCardColor[0].map { it.toArgb() }, subjectId = 5),
     )
 
     val scope = rememberCoroutineScope()
@@ -241,7 +242,7 @@ fun TaskScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = sheetState.currentValue.name,
+                    text = "English",
                     style = MaterialTheme.typography.bodyLarge
                 )
 

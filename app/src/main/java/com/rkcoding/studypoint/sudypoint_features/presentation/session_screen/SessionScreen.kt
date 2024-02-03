@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -31,6 +32,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,12 +77,12 @@ fun SessionScreen(
         )
     )
     val subjects = listOf(
-        Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0], subjectId = 0),
-        Subject(name = "Hindi", goalHours = 10f, color = Subject.subjectCardColor[1], subjectId = 1),
-        Subject(name = "Maths", goalHours = 5f, color = Subject.subjectCardColor[2], subjectId = 2),
-        Subject(name = "Science", goalHours = 25f, color = Subject.subjectCardColor[3], subjectId = 3),
-        Subject(name = "Computer", goalHours = 35f, color = Subject.subjectCardColor[4], subjectId = 4),
-        Subject(name = "Social Science", goalHours = 18f, color = Subject.subjectCardColor[0], subjectId = 5),
+        Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0].map { it.toArgb() }, subjectId = 0),
+        Subject(name = "Hindi", goalHours = 10f, color = Subject.subjectCardColor[1].map { it.toArgb() }, subjectId = 1),
+        Subject(name = "Maths", goalHours = 5f, color = Subject.subjectCardColor[2].map { it.toArgb() }, subjectId = 2),
+        Subject(name = "Science", goalHours = 25f, color = Subject.subjectCardColor[3].map { it.toArgb() }, subjectId = 3),
+        Subject(name = "Computer", goalHours = 35f, color = Subject.subjectCardColor[4].map { it.toArgb() }, subjectId = 4),
+        Subject(name = "Social Science", goalHours = 18f, color = Subject.subjectCardColor[0].map { it.toArgb() }, subjectId = 5),
     )
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -113,6 +116,7 @@ fun SessionScreen(
     )
 
     Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SessionTopAppBar(
                 title = "Study Session",
@@ -124,20 +128,22 @@ fun SessionScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = paddingValues.calculateTopPadding())
+                .padding(
+                    top = paddingValues.calculateTopPadding()
+                )
                 .padding(horizontal = 12.dp)
         ){
             item {
                 TimerSection(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .padding(horizontal = 60.dp)
                         .aspectRatio(1f)
                 )
             }
 
             item {
                 RelatedToSubject(
-                    relatedTOSubject = sheetState.currentValue.name,
+                    relatedTOSubject = "English",
                     onClick = { bottomSheetOpen = true }
                 )
             }
@@ -145,8 +151,7 @@ fun SessionScreen(
             item {
                 ButtonSection(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                        .fillMaxWidth(),
                     statButtonClick = { /*TODO*/ },
                     cancelButtonClick = { /*TODO*/ },
                     finishBUTTONcLICK = {  }
@@ -209,7 +214,7 @@ fun RelatedToSubject(
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text(text = "Related to Subject", style = MaterialTheme.typography.bodyMedium)
+        Text(text = "Related to Subject", style = MaterialTheme.typography.bodyLarge)
 
         Row(
             modifier = Modifier.fillMaxWidth(),
