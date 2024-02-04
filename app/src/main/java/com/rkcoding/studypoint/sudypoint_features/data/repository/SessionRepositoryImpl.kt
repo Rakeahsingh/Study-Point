@@ -24,10 +24,6 @@ class SessionRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteSessionBySubjectId(subjectId: Int) {
-        TODO("Not yet implemented")
-    }
-
     override fun getAllSession(): Flow<List<Session>> {
         TODO("Not yet implemented")
     }
@@ -41,14 +37,18 @@ class SessionRepositoryImpl @Inject constructor(
     }
 
     override fun getRecentTenSessionForSubject(subjectId: Int): Flow<List<Session>> {
-        TODO("Not yet implemented")
+        return dao.getRecentSessionForSubject(subjectId).map {
+            it.map { session ->
+                session.toSession()
+            }
+        }.take(count = 10)
     }
 
     override fun getTotalSessionDuration(): Flow<Long> {
         return dao.getTotalSessionDuration()
     }
 
-    override fun getTotalSessionDuration(subjectId: Int): Flow<Long> {
-        TODO("Not yet implemented")
+    override fun getTotalSessionDurationBySubjectId(subjectId: Int): Flow<Long> {
+        return dao.getTotalSessionDurationById(subjectId)
     }
 }
