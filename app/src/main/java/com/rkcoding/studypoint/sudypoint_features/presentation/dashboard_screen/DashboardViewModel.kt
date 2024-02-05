@@ -69,6 +69,7 @@ class DashboardViewModel @Inject constructor(
     val snakeBar = _snakeBarEvent.receiveAsFlow()
 
 
+
     fun onEvent(event: DashboardEvent){
         when(event){
             is DashboardEvent.DeleteSessionButtonClick -> {
