@@ -28,8 +28,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rkcoding.studypoint.core.navigation.Screen
 import com.rkcoding.studypoint.core.utils.ShowSnackBarEvent
-import com.rkcoding.studypoint.sudypoint_features.domain.model.Session
-import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.AddSubjectDialog
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.AddSubjectSection
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.CountCardSection
@@ -37,7 +35,6 @@ import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.sessionList
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.taskList
 import com.rkcoding.studypoint.ui.theme.DarkBlue
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,76 +61,12 @@ fun DashboardScreen(
                         duration = event.duration
                     )
                 }
+
+                ShowSnackBarEvent.NavigateUp -> Unit
             }
         }
     }
 
-
-//    val subjects = listOf(
-//        Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0].map { it.toArgb() }, subjectId = 0),
-//        Subject(name = "Hindi", goalHours = 10f, color = Subject.subjectCardColor[1].map { it.toArgb() }, subjectId = 1),
-//        Subject(name = "Maths", goalHours = 5f, color = Subject.subjectCardColor[2].map { it.toArgb() }, subjectId = 2),
-//        Subject(name = "Science", goalHours = 25f, color = Subject.subjectCardColor[3].map { it.toArgb() }, subjectId = 3),
-//        Subject(name = "Computer", goalHours = 35f, color = Subject.subjectCardColor[4].map { it.toArgb() }, subjectId = 4),
-//        Subject(name = "Social Science", goalHours = 18f, color = Subject.subjectCardColor[0].map { it.toArgb() }, subjectId = 5),
-//    )
-
-    val tasks = listOf(
-        Task(
-            title = "Preparing notes",
-            description = "",
-            dueDate = 0L,
-            priority = 0,
-            relatedToSubject = "",
-            isCompleted = false,
-            taskSubjectId = 0,
-            taskId = 0
-        ),
-        Task(
-            title = "complete homework",
-            description = "",
-            dueDate = 0L,
-            priority = 1,
-            relatedToSubject = "",
-            isCompleted = true,
-            taskSubjectId = 1,
-            taskId = 1
-        ),
-        Task(
-            title = "Assignments",
-            description = "",
-            dueDate = 0L,
-            priority = 2,
-            relatedToSubject = "",
-            isCompleted = false,
-            taskSubjectId = 2,
-            taskId = 2
-        )
-    )
-
-    val session = listOf(
-        Session(
-            sessionId = 0,
-            sessionSubjectId = 0,
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 2
-        ),
-        Session(
-            sessionId = 1,
-            sessionSubjectId = 1,
-            relatedToSubject = "Hindi",
-            date = 0L,
-            duration = 4
-        ),
-        Session(
-            sessionId = 2,
-            sessionSubjectId = 2,
-            relatedToSubject = "Math",
-            date = 0L,
-            duration = 6
-        )
-    )
 
     var isAddSubjectDialog by remember {
         mutableStateOf(false)

@@ -25,7 +25,11 @@ class SessionRepositoryImpl @Inject constructor(
     }
 
     override fun getAllSession(): Flow<List<Session>> {
-        TODO("Not yet implemented")
+        return dao.getAllSession().map {
+            it.map { session ->
+                session.toSession()
+            }
+        }
     }
 
     override fun getRecentFiveSessions(): Flow<List<Session>> {

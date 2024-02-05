@@ -138,7 +138,8 @@ fun SubjectCard(
             Text(
                 text = subjectName,
                 fontSize = 18.sp,
-                color = Color.White
+                color = Color.White,
+                maxLines = 1
             )
         }
     }

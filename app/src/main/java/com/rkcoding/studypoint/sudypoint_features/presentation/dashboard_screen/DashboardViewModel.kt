@@ -13,12 +13,12 @@ import com.rkcoding.studypoint.sudypoint_features.domain.repository.SessionRepos
 import com.rkcoding.studypoint.sudypoint_features.domain.repository.SubjectRepository
 import com.rkcoding.studypoint.sudypoint_features.domain.repository.TaskRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -65,8 +65,8 @@ class DashboardViewModel @Inject constructor(
             initialValue = emptyList()
         )
 
-    private val _snakeBarEvent = MutableSharedFlow<ShowSnackBarEvent>()
-    val snakeBar = _snakeBarEvent.asSharedFlow()
+    private val _snakeBarEvent = Channel<ShowSnackBarEvent>()
+    val snakeBar = _snakeBarEvent.receiveAsFlow()
 
 
     fun onEvent(event: DashboardEvent){
@@ -115,6 +115,7 @@ class DashboardViewModel @Inject constructor(
                         color = _state.value.subjectCardColor.map { it.toArgb() }
                     )
                 )
+
                 _state.update {
                     it.copy(
                         subjectName = "",
@@ -122,11 +123,11 @@ class DashboardViewModel @Inject constructor(
                         subjectCardColor = Subject.subjectCardColor.random()
                     )
                 }
-                _snakeBarEvent.emit(
+                _snakeBarEvent.send(
                     ShowSnackBarEvent.ShowSnakeBar("Save Subject Successfully")
                 )
-            }catch (e: Exception){
-                _snakeBarEvent.emit(
+            } catch (e: Exception){
+                _snakeBarEvent.send(
                     ShowSnackBarEvent.ShowSnakeBar(
                         "Couldn't Save Subject. ${e.message}",
                         SnackbarDuration.Long

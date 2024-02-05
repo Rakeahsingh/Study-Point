@@ -72,8 +72,7 @@ fun NavigationGraphBuilder() {
         ){
             val subject = it.arguments?.getInt("subjectId") ?: -1
             SubjectScreen(
-                navController = navController,
-                subjects = subject
+                navController = navController
             )
         }
 

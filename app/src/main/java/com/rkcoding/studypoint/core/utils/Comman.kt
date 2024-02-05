@@ -24,5 +24,7 @@ sealed class ShowSnackBarEvent(){
         val duration: SnackbarDuration = SnackbarDuration.Short
     ): ShowSnackBarEvent()
 
+    data object NavigateUp: ShowSnackBarEvent()
+
 }
 

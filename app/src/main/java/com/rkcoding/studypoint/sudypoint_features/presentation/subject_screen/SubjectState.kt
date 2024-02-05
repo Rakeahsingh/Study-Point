@@ -15,6 +15,5 @@ data class SubjectState(
     val upcomingTasks: List<Task> = emptyList(),
     val completedTasks: List<Task> = emptyList(),
     val recentStudiesSession: List<Session> = emptyList(),
-    val session: Session? = null,
-    val isLoading: Boolean = false
+    val session: Session? = null
 )

@@ -1,7 +1,8 @@
 package com.rkcoding.studypoint.sudypoint_features.data.repository
 
+import com.rkcoding.studypoint.sudypoint_features.data.local.dao.SessionDao
 import com.rkcoding.studypoint.sudypoint_features.data.local.dao.SubjectDao
-import com.rkcoding.studypoint.sudypoint_features.data.local.entity.SubjectEntity
+import com.rkcoding.studypoint.sudypoint_features.data.local.dao.TaskDao
 import com.rkcoding.studypoint.sudypoint_features.data.mapper.toSubject
 import com.rkcoding.studypoint.sudypoint_features.data.mapper.toSubjectEntity
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
@@ -11,18 +12,22 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class SubjectRepositoryImpl @Inject constructor(
-    private val dao: SubjectDao
+    private val dao: SubjectDao,
+    private val taskDao: TaskDao,
+    private val sessionDao: SessionDao
 ): SubjectRepository {
     override suspend fun upsertSubject(subject: Subject) {
         dao.upsertSubject(subject.toSubjectEntity())
     }
 
     override suspend fun deleteSubject(subjectId: Int) {
-        TODO("Not yet implemented")
+        dao.deleteSubject(subjectId)
+        taskDao.deleteTaskBySubjectId(subjectId)
+        sessionDao.deleteSessionBySubjectId(subjectId)
     }
 
     override suspend fun getSubjectById(subjectId: Int): Subject? {
-        TODO("Not yet implemented")
+        return dao.getSubjectById(subjectId)?.toSubject()
     }
 
     override fun getAllSubject(): Flow<List<Subject>> {

@@ -16,10 +16,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -33,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.rkcoding.studypoint.core.navigation.Screen
+import com.rkcoding.studypoint.core.utils.ShowSnackBarEvent
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Session
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
@@ -41,17 +45,42 @@ import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.sessionList
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.taskList
 import com.rkcoding.studypoint.sudypoint_features.presentation.subject_screen.component.CountCardSection
+import kotlinx.coroutines.flow.collectLatest
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectScreen(
-    subjects: Int,
     navController: NavController,
     viewModel: SubjectViewModel = hiltViewModel()
 ) {
 
     val state by viewModel.state.collectAsState()
+
+    val snackBarHost = remember {
+       SnackbarHostState()
+    }
+
+    LaunchedEffect(key1 = true){
+        viewModel.snackBarEvent.collectLatest { event ->
+            when(event){
+                is ShowSnackBarEvent.ShowSnakeBar -> {
+                    snackBarHost.showSnackbar(
+                        message = event.message,
+                        duration = event.duration
+                    )
+                }
+
+                ShowSnackBarEvent.NavigateUp -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(key1 = state.goalStudiesHour, key2 = state.studiedHour){
+        viewModel.onEvent(SubjectEvent.UpdateSubject)
+    }
 
     val tasks = listOf(
         Task(
@@ -159,6 +188,7 @@ fun SubjectScreen(
     )
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackBarHost) },
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             TopAppBar(
