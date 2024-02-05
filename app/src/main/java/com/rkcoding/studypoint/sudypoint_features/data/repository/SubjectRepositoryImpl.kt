@@ -42,7 +42,7 @@ class SubjectRepositoryImpl @Inject constructor(
         return dao.getTotalSubjectCount()
     }
 
-    override fun getTotalGoalHour(): Flow<Float> {
+    override fun getTotalGoalHour(): Flow<Float?> {
         return dao.getTotalGoalHour()
     }
 }

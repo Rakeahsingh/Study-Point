@@ -81,7 +81,7 @@ fun AddSubjectSection(
                 modifier = Modifier.fillMaxWidth(),
                 text = "You don't have any Subject. \n Click the + Icon to Add Subject",
                 textAlign = TextAlign.Center,
-                fontSize = 18.sp,
+                fontSize = 14.sp,
                 color = Color.Gray
             )
         }

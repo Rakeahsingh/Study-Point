@@ -47,7 +47,7 @@ class SubjectViewModel @Inject constructor(
             upcomingTasks = upcomingTask,
             completedTasks = completedTask,
             recentStudiesSession = recentSessions,
-            studiedHour = totalSessionDuration.toHour()
+            studiedHour = totalSessionDuration?.toHour() ?: 0f
         )
     }.stateIn(
         scope = viewModelScope,
@@ -94,6 +94,7 @@ class SubjectViewModel @Inject constructor(
                     )
                 }
             }
+
             is SubjectEvent.OnTaskCompleteChange -> TODO()
 
             SubjectEvent.UpdateSubject -> updateSubject()
@@ -167,6 +168,10 @@ class SubjectViewModel @Inject constructor(
                     )
                 )
 
+                _snackBarEvent.send(
+                    ShowSnackBarEvent.NavigateUp
+                )
+
                 _state.update {
                     it.copy(
                         subjectName = "",
@@ -174,6 +179,7 @@ class SubjectViewModel @Inject constructor(
                         subjectCardColor = Subject.subjectCardColor.random()
                     )
                 }
+
 
             }catch (e: Exception){
                 _snackBarEvent.send(

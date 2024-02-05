@@ -78,9 +78,9 @@ fun SubjectScreen(
         }
     }
 
-    LaunchedEffect(key1 = state.goalStudiesHour, key2 = state.studiedHour){
-        viewModel.onEvent(SubjectEvent.UpdateSubject)
-    }
+//    LaunchedEffect(key1 = state.goalStudiesHour, key2 = state.studiedHour){
+//        viewModel.onEvent(SubjectEvent.UpdateSubject)
+//    }
 
     val tasks = listOf(
         Task(

@@ -1,5 +1,7 @@
 package com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,6 +39,7 @@ import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.
 import com.rkcoding.studypoint.ui.theme.DarkBlue
 import kotlinx.coroutines.flow.collectLatest
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(

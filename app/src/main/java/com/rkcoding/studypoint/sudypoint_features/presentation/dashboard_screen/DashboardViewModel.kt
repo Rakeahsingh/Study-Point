@@ -42,8 +42,8 @@ class DashboardViewModel @Inject constructor(
         state.copy(
             subject = subjects,
             totalSubjectCountHour = subjectCount,
-            totalGoalStudiesHour = goalHour,
-            totalStudiesHour = totalSessionDuration.toHour()
+            totalGoalStudiesHour = goalHour ?: 0f,
+            totalStudiesHour = totalSessionDuration?.toHour() ?: 0f
         )
     }.stateIn(
         scope = viewModelScope,
@@ -80,7 +80,8 @@ class DashboardViewModel @Inject constructor(
                 }
             }
             DashboardEvent.DeleteSession -> TODO()
-            is DashboardEvent.OnGoalHourChange -> {
+
+            is DashboardEvent.OnGoalHourChange ->  {
                 _state.update {
                     it.copy(
                         goalStudiesHour = event.hour
@@ -105,6 +106,7 @@ class DashboardViewModel @Inject constructor(
             DashboardEvent.SaveSubject -> saveSubject()
         }
     }
+
 
     private fun saveSubject() {
         viewModelScope.launch {

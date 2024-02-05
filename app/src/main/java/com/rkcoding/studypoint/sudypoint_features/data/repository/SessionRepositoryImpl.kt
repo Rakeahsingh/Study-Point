@@ -48,11 +48,11 @@ class SessionRepositoryImpl @Inject constructor(
         }.take(count = 10)
     }
 
-    override fun getTotalSessionDuration(): Flow<Long> {
+    override fun getTotalSessionDuration(): Flow<Long?> {
         return dao.getTotalSessionDuration()
     }
 
-    override fun getTotalSessionDurationBySubjectId(subjectId: Int): Flow<Long> {
+    override fun getTotalSessionDurationBySubjectId(subjectId: Int): Flow<Long?> {
         return dao.getTotalSessionDurationById(subjectId)
     }
 }

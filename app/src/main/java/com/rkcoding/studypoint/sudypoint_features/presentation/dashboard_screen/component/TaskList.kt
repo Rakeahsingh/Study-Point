@@ -1,5 +1,7 @@
 package com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -35,9 +37,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rkcoding.studypoint.R
 import com.rkcoding.studypoint.core.utils.Priority
+import com.rkcoding.studypoint.core.utils.toDateFormat
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun LazyListScope.taskList(
     sectionTitle: String,
     task: List<Task>,
@@ -73,7 +77,7 @@ fun LazyListScope.taskList(
                     modifier = Modifier.fillMaxWidth(),
                     text = "You don't have any Upcoming Tasks. \n Click the + Icon to Add Tasks",
                     textAlign = TextAlign.Center,
-                    fontSize = 18.sp,
+                    fontSize = 14.sp,
                     color = Color.Gray
                 )
             }
@@ -94,6 +98,7 @@ fun LazyListScope.taskList(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TaskCardSection(
     modifier: Modifier = Modifier,
@@ -136,7 +141,7 @@ fun TaskCardSection(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "${task.dueDate}",
+                    text = task.dueDate.toDateFormat(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }

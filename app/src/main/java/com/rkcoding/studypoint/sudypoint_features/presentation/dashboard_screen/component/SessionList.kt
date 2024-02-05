@@ -65,7 +65,7 @@ fun LazyListScope.sessionList(
                     modifier = Modifier.fillMaxWidth(),
                     text = "You don't have any Study Sessions. \n Click the + Icon to Add Sessions",
                     textAlign = TextAlign.Center,
-                    fontSize = 18.sp,
+                    fontSize = 14.sp,
                     color = Color.Gray
                 )
             }

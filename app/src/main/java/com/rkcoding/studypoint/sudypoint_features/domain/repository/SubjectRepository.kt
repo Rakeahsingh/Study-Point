@@ -17,6 +17,6 @@ interface SubjectRepository {
 
     fun getTotalSubjectCount(): Flow<Int>
 
-    fun getTotalGoalHour(): Flow<Float>
+    fun getTotalGoalHour(): Flow<Float?>
 
 }
