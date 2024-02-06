@@ -131,7 +131,8 @@ fun SessionScreen(
                 .padding(
                     top = paddingValues.calculateTopPadding()
                 )
-                .padding(horizontal = 12.dp)
+                .padding(top = 12.dp)
+
         ){
             item {
                 TimerSection(
@@ -143,6 +144,8 @@ fun SessionScreen(
 
             item {
                 RelatedToSubject(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 10.dp),
                     relatedTOSubject = "English",
                     onClick = { bottomSheetOpen = true }
                 )
@@ -151,7 +154,8 @@ fun SessionScreen(
             item {
                 ButtonSection(
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
                     statButtonClick = { /*TODO*/ },
                     cancelButtonClick = { /*TODO*/ },
                     finishBUTTONcLICK = {  }

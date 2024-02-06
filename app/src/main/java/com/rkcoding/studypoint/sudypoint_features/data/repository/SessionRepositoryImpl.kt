@@ -21,7 +21,7 @@ class SessionRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteSession(session: Session) {
-        TODO("Not yet implemented")
+        dao.deleteSession(session.toSessionEntity())
     }
 
     override fun getAllSession(): Flow<List<Session>> {

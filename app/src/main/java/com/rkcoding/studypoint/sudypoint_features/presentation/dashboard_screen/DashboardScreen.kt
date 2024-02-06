@@ -165,7 +165,10 @@ fun DashboardScreen(
             taskList(
                 sectionTitle = "Upcoming Tasks",
                 task = task,
-                onTaskCardClick = { navController.navigate(Screen.TaskScreen.route) },
+                onTaskCardClick = { task ->
+                    navController.navigate(
+                        route = Screen.TaskScreen.route + "?subjectId=${task.taskSubjectId}/taskId=${task.taskId}"
+                    ) },
                 onTaskCheckBoxClick = { task ->
                     viewModel.onEvent(DashboardEvent.OnTaskCompleteChange(task))
                 }

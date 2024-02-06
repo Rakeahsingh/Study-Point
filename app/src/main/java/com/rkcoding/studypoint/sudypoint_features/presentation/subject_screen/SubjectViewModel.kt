@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.rkcoding.studypoint.core.utils.ShowSnackBarEvent
 import com.rkcoding.studypoint.core.utils.toHour
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
+import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
 import com.rkcoding.studypoint.sudypoint_features.domain.repository.SessionRepository
 import com.rkcoding.studypoint.sudypoint_features.domain.repository.SubjectRepository
 import com.rkcoding.studypoint.sudypoint_features.domain.repository.TaskRepository
@@ -95,7 +96,7 @@ class SubjectViewModel @Inject constructor(
                 }
             }
 
-            is SubjectEvent.OnTaskCompleteChange -> TODO()
+            is SubjectEvent.OnTaskCompleteChange -> updateTask(event.task)
 
             SubjectEvent.UpdateSubject -> updateSubject()
 
@@ -108,6 +109,41 @@ class SubjectViewModel @Inject constructor(
                 }
             }
 
+        }
+    }
+
+    private fun updateTask(task: Task) {
+        viewModelScope.launch {
+            try {
+                taskRepository.upsertTask(
+                    task = task.copy(
+                        isCompleted = !task.isCompleted
+                    )
+                )
+                if (task.isCompleted){
+                    _snackBarEvent.send(
+                        ShowSnackBarEvent.ShowSnakeBar(
+                            message = "Saved in Upcoming Task Section",
+                            duration = SnackbarDuration.Short
+                        )
+                    )
+                }else{
+                    _snackBarEvent.send(
+                        ShowSnackBarEvent.ShowSnakeBar(
+                            message = "Saved in Completed Task Section",
+                            duration = SnackbarDuration.Short
+                        )
+                    )
+                }
+
+            }catch (e: Exception){
+                _snackBarEvent.send(
+                    ShowSnackBarEvent.ShowSnakeBar(
+                        message = "couldn't update",
+                        duration = SnackbarDuration.Long
+                    )
+                )
+            }
         }
     }
 
@@ -161,6 +197,14 @@ class SubjectViewModel @Inject constructor(
                     )
                 )
 
+                _state.update {
+                    it.copy(
+                        subjectName = "",
+                        goalStudiesHour = "",
+                        subjectCardColor = Subject.subjectCardColor.random()
+                    )
+                }
+
                 _snackBarEvent.send(
                     ShowSnackBarEvent.ShowSnakeBar(
                         "Subject Updated Successfully",
@@ -172,13 +216,6 @@ class SubjectViewModel @Inject constructor(
                     ShowSnackBarEvent.NavigateUp
                 )
 
-                _state.update {
-                    it.copy(
-                        subjectName = "",
-                        goalStudiesHour = "",
-                        subjectCardColor = Subject.subjectCardColor.random()
-                    )
-                }
 
 
             }catch (e: Exception){

@@ -79,7 +79,9 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
             }
-            DashboardEvent.DeleteSession -> TODO()
+            DashboardEvent.DeleteSession -> {
+                TODO()
+            }
 
             is DashboardEvent.OnGoalHourChange ->  {
                 _state.update {
@@ -102,8 +104,44 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
             }
-            is DashboardEvent.OnTaskCompleteChange -> TODO()
+
+            is DashboardEvent.OnTaskCompleteChange -> updateTask(event.task)
+
             DashboardEvent.SaveSubject -> saveSubject()
+        }
+    }
+
+    private fun updateTask(task: Task) {
+        viewModelScope.launch {
+            try {
+                taskRepository.upsertTask(
+                    task = task.copy(
+                        isCompleted = !task.isCompleted
+                    )
+                )
+                if (task.isCompleted){
+                    _snakeBarEvent.send(
+                        ShowSnackBarEvent.ShowSnakeBar(
+                            message = "Saved in Upcoming Task Section",
+                            duration = SnackbarDuration.Short
+                        )
+                    )
+                }else{
+                    _snakeBarEvent.send(
+                        ShowSnackBarEvent.ShowSnakeBar(
+                            message = "Saved in Completed Task Section",
+                            duration = SnackbarDuration.Short
+                        )
+                    )
+                }
+            }catch (e: Exception){
+                _snakeBarEvent.send(
+                    ShowSnackBarEvent.ShowSnakeBar(
+                        message = "couldn't update",
+                        duration = SnackbarDuration.Long
+                    )
+                )
+            }
         }
     }
 

@@ -19,12 +19,12 @@ class TaskRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteTask(taskId: Int) {
-        TODO("Not yet implemented")
+        dao.deleteTask(taskId)
     }
 
 
     override suspend fun getTaskById(taskId: Int): Task? {
-        TODO("Not yet implemented")
+        return dao.getTaskById(taskId)?.toTask()
     }
 
     override fun getUpcomingTaskForSubjectId(subjectId: Int): Flow<List<Task>> {

@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColor
@@ -136,10 +137,13 @@ fun SubjectCard(
             Spacer(modifier = Modifier.height(10.dp))
 
             Text(
+                modifier = Modifier.fillMaxWidth(),
                 text = subjectName,
                 fontSize = 18.sp,
+                textAlign = TextAlign.Center,
                 color = Color.White,
-                maxLines = 1
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

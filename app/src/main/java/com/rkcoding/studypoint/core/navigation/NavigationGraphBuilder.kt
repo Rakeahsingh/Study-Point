@@ -77,7 +77,18 @@ fun NavigationGraphBuilder() {
         }
 
         composable(
-            route = Screen.TaskScreen.route,
+            route = Screen.TaskScreen.route + "?subjectId={subjectId}/taskId={taskId}",
+            arguments = listOf(
+                navArgument("subjectId"){
+                    type = NavType.IntType
+                    defaultValue = -1
+                },
+
+                navArgument("taskId"){
+                    type = NavType.IntType
+                    defaultValue = -1
+                }
+            ),
             enterTransition = {
                 slideIntoContainer(
                     AnimatedContentTransitionScope.SlideDirection.Down,
@@ -103,6 +114,8 @@ fun NavigationGraphBuilder() {
                 )
             }
         ){
+            val subject = it.arguments?.getInt("subjectId") ?: -1
+            val task = it.arguments?.getInt("taskId") ?: -1
             TaskScreen(navController = navController)
         }
 

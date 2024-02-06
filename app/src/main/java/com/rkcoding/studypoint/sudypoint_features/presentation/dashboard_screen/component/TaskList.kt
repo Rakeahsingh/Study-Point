@@ -30,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -45,7 +47,7 @@ import com.rkcoding.studypoint.sudypoint_features.domain.model.Task
 fun LazyListScope.taskList(
     sectionTitle: String,
     task: List<Task>,
-    onTaskCardClick: (Int?) -> Unit,
+    onTaskCardClick: (Task) -> Unit,
     onTaskCheckBoxClick: (Task) -> Unit
 ){
     item {
@@ -89,7 +91,7 @@ fun LazyListScope.taskList(
         TaskCardSection(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
             task = tasks,
-            onCardClick = { onTaskCardClick(tasks.taskId) },
+            onCardClick = { onTaskCardClick(tasks) },
             onCheckBoxClick = { onTaskCheckBoxClick(tasks) }
         )
     }
@@ -131,6 +133,22 @@ fun TaskCardSection(
                 Text(
                     text = task.title,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = MaterialTheme.typography.titleMedium,
+                    textDecoration = if (task.isCompleted){
+                        TextDecoration.LineThrough
+                    } else TextDecoration.None
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = task.description,
+                    maxLines = 1,
+                    fontWeight = FontWeight.Light,
+                    fontSize = 14.sp,
+                    color = Color.Gray,
+                    fontStyle = FontStyle.Italic,
                     overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.titleMedium,
                     textDecoration = if (task.isCompleted){

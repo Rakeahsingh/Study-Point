@@ -1,5 +1,7 @@
 package com.rkcoding.studypoint.sudypoint_features.presentation.subject_screen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -48,6 +50,7 @@ import com.rkcoding.studypoint.sudypoint_features.presentation.subject_screen.co
 import kotlinx.coroutines.flow.collectLatest
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SubjectScreen(
@@ -82,38 +85,7 @@ fun SubjectScreen(
 //        viewModel.onEvent(SubjectEvent.UpdateSubject)
 //    }
 
-    val tasks = listOf(
-        Task(
-            title = "Preparing notes",
-            description = "",
-            dueDate = 0L,
-            priority = 0,
-            relatedToSubject = "",
-            isCompleted = false,
-            taskSubjectId = 0,
-            taskId = 0
-        ),
-        Task(
-            title = "complete homework",
-            description = "",
-            dueDate = 0L,
-            priority = 1,
-            relatedToSubject = "",
-            isCompleted = true,
-            taskSubjectId = 1,
-            taskId = 1
-        ),
-        Task(
-            title = "Assignments",
-            description = "",
-            dueDate = 0L,
-            priority = 2,
-            relatedToSubject = "",
-            isCompleted = false,
-            taskSubjectId = 2,
-            taskId = 2
-        )
-    )
+
 
     val session = listOf(
         Session(
@@ -152,7 +124,7 @@ fun SubjectScreen(
         isDialogOpen = deleteSessionDialog,
         title = "Delete Session?",
         bodyText = "Are you sure, You want to delete this Session? Your studies hour will be reduce"
-                + "by this session time. This action can not be under",
+                + " by this session time. This action can not be under",
         onDismissRequest = { deleteSessionDialog = false },
         onConfirmButtonClick = {
             viewModel.onEvent(SubjectEvent.DeleteSession)
@@ -164,7 +136,7 @@ fun SubjectScreen(
         isDialogOpen = deleteSubjectDialog,
         title = "Delete Subjects?",
         bodyText = "Are you sure, You want to delete this Subject? All related"
-                + "task and study session will be permanently removed. This action can not be under ",
+                + " task and study session will be permanently removed. This action can not be under ",
         onDismissRequest = { deleteSubjectDialog = false },
         onConfirmButtonClick = {
             viewModel.onEvent(SubjectEvent.DeleteSubject)
@@ -225,8 +197,12 @@ fun SubjectScreen(
 
             taskList(
                 sectionTitle = "Upcoming Tasks",
-                task = tasks,
-                onTaskCardClick = {  },
+                task = state.upcomingTasks,
+                onTaskCardClick = { task ->
+                    navController.navigate(
+                        route = Screen.TaskScreen.route + "?subjectId=${task.taskSubjectId}/taskId=${task.taskId}"
+                    )
+                },
                 onTaskCheckBoxClick = {  task ->
                     viewModel.onEvent(SubjectEvent.OnTaskCompleteChange(task))
                 }
@@ -234,8 +210,12 @@ fun SubjectScreen(
 
             taskList(
                 sectionTitle = "Completed Tasks",
-                task = tasks,
-                onTaskCardClick = {  },
+                task = state.completedTasks,
+                onTaskCardClick = { task ->
+                    navController.navigate(
+                        route = Screen.TaskScreen.route + "?subjectId=${task.taskSubjectId}/taskId=${task.taskId}"
+                    )
+                },
                 onTaskCheckBoxClick = { task ->
                     viewModel.onEvent(SubjectEvent.OnTaskCompleteChange(task))
                 }
@@ -306,3 +286,5 @@ fun TopAppBar(
         }
     )
 }
+
+
