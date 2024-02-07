@@ -1,6 +1,7 @@
 package com.rkcoding.studypoint.sudypoint_features.presentation.session_screen
 
-import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -21,11 +21,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,20 +37,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.navDeepLink
 import com.rkcoding.studypoint.core.utils.Constants.ACTION_SERVICE_CANCEL
 import com.rkcoding.studypoint.core.utils.Constants.ACTION_SERVICE_START
 import com.rkcoding.studypoint.core.utils.Constants.ACTION_SERVICE_STOP
-import com.rkcoding.studypoint.sudypoint_features.domain.model.Session
-import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
+import com.rkcoding.studypoint.core.utils.ShowSnackBarEvent
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.DeleteDialog
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.sessionList
 import com.rkcoding.studypoint.sudypoint_features.presentation.session_screen.component.ButtonSection
@@ -55,51 +55,26 @@ import com.rkcoding.studypoint.sudypoint_features.presentation.session_screen.co
 import com.rkcoding.studypoint.sudypoint_features.presentation.session_screen.component.TimerSection
 import com.rkcoding.studypoint.sudypoint_features.presentation.session_screen.component.TimerState
 import com.rkcoding.studypoint.sudypoint_features.presentation.task_screen.component.SubjectListBottomSheet
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.time.DurationUnit
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionScreen(
+    viewModel: SessionViewModel = hiltViewModel(),
     navController: NavController,
     timerService: StudySessionTimerService
 ) {
+
+    val state by viewModel.state.collectAsState()
 
     val hours by timerService.hours
     val minutes by timerService.minutes
     val second by timerService.seconds
     val currentTimerState by timerService.currentState
 
-    val session = listOf(
-        Session(
-            sessionId = 0,
-            sessionSubjectId = 0,
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 2
-        ),
-        Session(
-            sessionId = 1,
-            sessionSubjectId = 1,
-            relatedToSubject = "Hindi",
-            date = 0L,
-            duration = 4
-        ),
-        Session(
-            sessionId = 2,
-            sessionSubjectId = 2,
-            relatedToSubject = "Math",
-            date = 0L,
-            duration = 6
-        )
-    )
-    val subjects = listOf(
-        Subject(name = "English", goalHours = 15f, color = Subject.subjectCardColor[0].map { it.toArgb() }, subjectId = 0),
-        Subject(name = "Hindi", goalHours = 10f, color = Subject.subjectCardColor[1].map { it.toArgb() }, subjectId = 1),
-        Subject(name = "Maths", goalHours = 5f, color = Subject.subjectCardColor[2].map { it.toArgb() }, subjectId = 2),
-        Subject(name = "Science", goalHours = 25f, color = Subject.subjectCardColor[3].map { it.toArgb() }, subjectId = 3),
-        Subject(name = "Computer", goalHours = 35f, color = Subject.subjectCardColor[4].map { it.toArgb() }, subjectId = 4),
-        Subject(name = "Social Science", goalHours = 18f, color = Subject.subjectCardColor[0].map { it.toArgb() }, subjectId = 5),
-    )
 
     val context = LocalContext.current
 
@@ -111,12 +86,31 @@ fun SessionScreen(
 
     var deleteDialogOpen by remember { mutableStateOf(false) }
 
+    val snackBarState = remember {
+        SnackbarHostState()
+    }
+
+    LaunchedEffect(key1 = true){
+        viewModel.snackBar.collectLatest { event ->
+            when(event){
+                ShowSnackBarEvent.NavigateUp -> navController.popBackStack()
+                is ShowSnackBarEvent.ShowSnakeBar -> {
+                    snackBarState.showSnackbar(
+                        message = event.message,
+                        duration = event.duration
+                    )
+                }
+            }
+        }
+    }
+
     DeleteDialog(
         isDialogOpen = deleteDialogOpen,
         bodyText = "Are you sure you want to Delete Session?" + "This action can't be undone.",
         title = "Delete Session?",
         onDismissRequest = { deleteDialogOpen = false },
         onConfirmButtonClick = {
+            viewModel.onEvent(SessionEvent.DeleteSession)
             deleteDialogOpen = false
         }
     )
@@ -125,15 +119,17 @@ fun SessionScreen(
         state = sheetState,
         isOpen = bottomSheetOpen,
         onDismissRequest = { bottomSheetOpen = false },
-        subject = subjects,
+        subject = state.subjects,
         onSubjectClick = {
             scope.launch { sheetState.hide() }.invokeOnCompletion {
                 if (!sheetState.isVisible) bottomSheetOpen = false
             }
+            viewModel.onEvent(SessionEvent.OnRelatedSubjectChange(it))
         }
     )
 
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackBarState)},
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             SessionTopAppBar(
@@ -165,9 +161,10 @@ fun SessionScreen(
 
             item {
                 RelatedToSubject(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 10.dp),
-                    relatedTOSubject = "English",
+                    relatedTOSubject = state.relatedToSubject ?: "",
                     onClick = { bottomSheetOpen = true }
                 )
             }
@@ -193,7 +190,14 @@ fun SessionScreen(
                             action = ACTION_SERVICE_CANCEL
                         )
                     },
-                    finishButtonClick = {  },
+                    finishButtonClick = {
+                        val duration = timerService.duration.toLong(DurationUnit.SECONDS)
+                        ServiceHelper.triggerForegroundService(
+                            context = context,
+                            action = ACTION_SERVICE_CANCEL
+                        )
+                        viewModel.onEvent(SessionEvent.SaveSession(duration))
+                    },
                     timerState = currentTimerState,
                     second = second
                 )
@@ -201,8 +205,11 @@ fun SessionScreen(
 
             sessionList(
                 sectionTitle = "Study Session History",
-                session = session,
-                onDeleteIconClick = { deleteDialogOpen = true },
+                session = state.sessions,
+                onDeleteIconClick = {
+                    deleteDialogOpen = true
+                    viewModel.onEvent(SessionEvent.OnDeleteSessionButtonClick(it))
+                },
                 onCardClick = {  }
             )
 
