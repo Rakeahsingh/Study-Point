@@ -25,3 +25,8 @@ fun Long.toHour(): Float{
     val hours = this.toFloat() / 3600f
     return "%.2f".format(hours).toFloat()
 }
+
+
+fun Int.pad(): String{
+    return this.toString().padStart(length = 2, padChar = '0')
+}

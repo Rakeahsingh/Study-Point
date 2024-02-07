@@ -1,5 +1,6 @@
 package com.rkcoding.studypoint.sudypoint_features.presentation.session_screen
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,24 +35,39 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.navDeepLink
+import com.rkcoding.studypoint.core.utils.Constants.ACTION_SERVICE_CANCEL
+import com.rkcoding.studypoint.core.utils.Constants.ACTION_SERVICE_START
+import com.rkcoding.studypoint.core.utils.Constants.ACTION_SERVICE_STOP
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Session
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Subject
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.DeleteDialog
 import com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component.sessionList
 import com.rkcoding.studypoint.sudypoint_features.presentation.session_screen.component.ButtonSection
+import com.rkcoding.studypoint.sudypoint_features.presentation.session_screen.component.ServiceHelper
+import com.rkcoding.studypoint.sudypoint_features.presentation.session_screen.component.StudySessionTimerService
 import com.rkcoding.studypoint.sudypoint_features.presentation.session_screen.component.TimerSection
+import com.rkcoding.studypoint.sudypoint_features.presentation.session_screen.component.TimerState
 import com.rkcoding.studypoint.sudypoint_features.presentation.task_screen.component.SubjectListBottomSheet
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionScreen(
-    navController: NavController
+    navController: NavController,
+    timerService: StudySessionTimerService
 ) {
+
+    val hours by timerService.hours
+    val minutes by timerService.minutes
+    val second by timerService.seconds
+    val currentTimerState by timerService.currentState
 
     val session = listOf(
         Session(
@@ -84,6 +100,8 @@ fun SessionScreen(
         Subject(name = "Computer", goalHours = 35f, color = Subject.subjectCardColor[4].map { it.toArgb() }, subjectId = 4),
         Subject(name = "Social Science", goalHours = 18f, color = Subject.subjectCardColor[0].map { it.toArgb() }, subjectId = 5),
     )
+
+    val context = LocalContext.current
 
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
@@ -138,7 +156,10 @@ fun SessionScreen(
                 TimerSection(
                     modifier = Modifier
                         .padding(horizontal = 60.dp)
-                        .aspectRatio(1f)
+                        .aspectRatio(1f),
+                    hour = hours,
+                    minute = minutes,
+                    second = second
                 )
             }
 
@@ -156,9 +177,25 @@ fun SessionScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp),
-                    statButtonClick = { /*TODO*/ },
-                    cancelButtonClick = { /*TODO*/ },
-                    finishBUTTONcLICK = {  }
+                    statButtonClick = {
+                        ServiceHelper.triggerForegroundService(
+                            context = context,
+                            action = if (currentTimerState == TimerState.STARTED){
+                                ACTION_SERVICE_STOP
+                            }else{
+                                ACTION_SERVICE_START
+                            }
+                        )
+                    },
+                    cancelButtonClick = {
+                        ServiceHelper.triggerForegroundService(
+                            context = context,
+                            action = ACTION_SERVICE_CANCEL
+                        )
+                    },
+                    finishButtonClick = {  },
+                    timerState = currentTimerState,
+                    second = second
                 )
             }
 
