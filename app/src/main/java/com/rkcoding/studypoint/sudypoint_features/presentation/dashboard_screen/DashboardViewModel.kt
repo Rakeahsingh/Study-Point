@@ -79,9 +79,8 @@ class DashboardViewModel @Inject constructor(
                     )
                 }
             }
-            DashboardEvent.DeleteSession -> {
-                TODO()
-            }
+
+            DashboardEvent.DeleteSession -> deleteSession()
 
             is DashboardEvent.OnGoalHourChange ->  {
                 _state.update {
@@ -171,6 +170,29 @@ class DashboardViewModel @Inject constructor(
                 _snakeBarEvent.send(
                     ShowSnackBarEvent.ShowSnakeBar(
                         "Couldn't Save Subject. ${e.message}",
+                        SnackbarDuration.Long
+                    )
+                )
+            }
+        }
+    }
+
+    private fun deleteSession(){
+        viewModelScope.launch {
+            try {
+                _state.value.session?.let {
+                    sessionRepository.deleteSession(it)
+                }
+                _snakeBarEvent.send(
+                    ShowSnackBarEvent.ShowSnakeBar(
+                        "Session Deleted Successfully",
+                        SnackbarDuration.Short
+                    )
+                )
+            }catch (e: Exception){
+                _snakeBarEvent.send(
+                    ShowSnackBarEvent.ShowSnakeBar(
+                        "Couldn't Delete Session. ${e.message}",
                         SnackbarDuration.Long
                     )
                 )

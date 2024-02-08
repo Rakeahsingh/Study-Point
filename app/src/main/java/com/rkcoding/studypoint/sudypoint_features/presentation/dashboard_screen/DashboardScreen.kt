@@ -177,7 +177,10 @@ fun DashboardScreen(
             sessionList(
                 sectionTitle = "Recent Study Sessions",
                 session = sessions,
-                onDeleteIconClick = { deleteDialog = true },
+                onDeleteIconClick = { session ->
+                    viewModel.onEvent(DashboardEvent.DeleteSessionButtonClick(session))
+                    deleteDialog = true
+                },
                 onCardClick = { navController.navigate(Screen.SessionScreen.route) }
             )
 

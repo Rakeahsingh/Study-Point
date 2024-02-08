@@ -18,7 +18,6 @@ enum class Priority(val title: String, val color: Color, val value: Int){
 
 
 sealed class ShowSnackBarEvent(){
-
     data class ShowSnakeBar(
         val message: String,
         val duration: SnackbarDuration = SnackbarDuration.Short

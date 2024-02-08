@@ -66,7 +66,7 @@ class SubjectViewModel @Inject constructor(
 
     fun onEvent(event: SubjectEvent){
         when(event){
-            SubjectEvent.DeleteSession -> TODO()
+            SubjectEvent.DeleteSession -> deleteSession()
 
             SubjectEvent.DeleteSubject -> deleteSubject()
 
@@ -78,7 +78,13 @@ class SubjectViewModel @Inject constructor(
                 }
             }
 
-            is SubjectEvent.OnSessionDeleteButtonClick -> TODO()
+            is SubjectEvent.OnSessionDeleteButtonClick -> {
+                _state.update {
+                    it.copy(
+                        session = event.session
+                    )
+                }
+            }
 
             is SubjectEvent.OnSubjectColorChange -> {
                 _state.update {
@@ -240,6 +246,29 @@ class SubjectViewModel @Inject constructor(
                         currentSubjectId = subject.subjectId
                     )
                 }
+            }
+        }
+    }
+
+    private fun deleteSession(){
+        viewModelScope.launch {
+            try {
+                _state.value.session?.let {
+                    sessionRepository.deleteSession(it)
+                }
+                _snackBarEvent.send(
+                    ShowSnackBarEvent.ShowSnakeBar(
+                        "Session Deleted Successfully",
+                        SnackbarDuration.Short
+                    )
+                )
+            }catch (e: Exception){
+                _snackBarEvent.send(
+                    ShowSnackBarEvent.ShowSnakeBar(
+                        "Couldn't Delete Session. ${e.message}",
+                        SnackbarDuration.Long
+                    )
+                )
             }
         }
     }

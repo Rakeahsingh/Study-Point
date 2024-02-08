@@ -1,5 +1,7 @@
 package com.rkcoding.studypoint.sudypoint_features.presentation.dashboard_screen.component
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -28,8 +30,11 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rkcoding.studypoint.R
+import com.rkcoding.studypoint.core.utils.toDateFormat
+import com.rkcoding.studypoint.core.utils.toHour
 import com.rkcoding.studypoint.sudypoint_features.domain.model.Session
 
+@RequiresApi(Build.VERSION_CODES.O)
 fun LazyListScope.sessionList(
     sectionTitle: String,
     session: List<Session>,
@@ -88,6 +93,7 @@ fun LazyListScope.sessionList(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SessionCardSection(
     modifier: Modifier = Modifier,
@@ -118,7 +124,7 @@ fun SessionCardSection(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    text = "${session.date}",
+                    text = session.date.toDateFormat(),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -126,7 +132,7 @@ fun SessionCardSection(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "${session.duration} hr",
+                text = "${session.duration.toHour()} hr",
                 style = MaterialTheme.typography.bodyMedium
             )
             IconButton(onClick = { onDeleteIconClick() }

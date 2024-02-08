@@ -104,6 +104,14 @@ fun SessionScreen(
         }
     }
 
+    LaunchedEffect(key1 = state.subjects){
+        val subjectId = timerService.subjectId.value
+        viewModel.onEvent(SessionEvent.UpdateSubjectIdAndRelatedSubject(
+            subjectId = subjectId,
+            relatedToSubject = state.subjects.find { it.subjectId == subjectId }?.name
+        ))
+    }
+
     DeleteDialog(
         isDialogOpen = deleteDialogOpen,
         bodyText = "Are you sure you want to Delete Session?" + "This action can't be undone.",
@@ -165,7 +173,8 @@ fun SessionScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp),
                     relatedTOSubject = state.relatedToSubject ?: "",
-                    onClick = { bottomSheetOpen = true }
+                    onClick = { bottomSheetOpen = true },
+                    second = second
                 )
             }
 
@@ -175,14 +184,19 @@ fun SessionScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 10.dp),
                     statButtonClick = {
-                        ServiceHelper.triggerForegroundService(
-                            context = context,
-                            action = if (currentTimerState == TimerState.STARTED){
-                                ACTION_SERVICE_STOP
-                            }else{
-                                ACTION_SERVICE_START
-                            }
-                        )
+                        if (state.subjectId != null && state.relatedToSubject != null) {
+                            ServiceHelper.triggerForegroundService(
+                                context = context,
+                                action = if (currentTimerState == TimerState.STARTED) {
+                                    ACTION_SERVICE_STOP
+                                } else {
+                                    ACTION_SERVICE_START
+                                }
+                            )
+                            timerService.subjectId.value = state.subjectId
+                        }else{
+                            viewModel.onEvent(SessionEvent.NotifyToUpdateSubject)
+                        }
                     },
                     cancelButtonClick = {
                         ServiceHelper.triggerForegroundService(
@@ -192,10 +206,13 @@ fun SessionScreen(
                     },
                     finishButtonClick = {
                         val duration = timerService.duration.toLong(DurationUnit.SECONDS)
-                        ServiceHelper.triggerForegroundService(
-                            context = context,
-                            action = ACTION_SERVICE_CANCEL
-                        )
+                        if (duration > 30){
+                            ServiceHelper.triggerForegroundService(
+                                context = context,
+                                action = ACTION_SERVICE_CANCEL
+                            )
+                        }
+
                         viewModel.onEvent(SessionEvent.SaveSession(duration))
                     },
                     timerState = currentTimerState,
@@ -254,7 +271,8 @@ fun SessionTopAppBar(
 fun RelatedToSubject(
     modifier: Modifier = Modifier,
     relatedTOSubject: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    second: String
 ) {
 
     Column(
@@ -274,7 +292,10 @@ fun RelatedToSubject(
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            IconButton(onClick = onClick) {
+            IconButton(
+                onClick = onClick,
+                enabled = second == "00"
+            ) {
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
                     contentDescription = "DropDown Icon"

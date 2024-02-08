@@ -18,6 +18,6 @@ sealed class SessionEvent {
 
     data object DeleteSession: SessionEvent()
 
-    data object CheckSubjectId: SessionEvent()
+    data object NotifyToUpdateSubject: SessionEvent()
 
 }
