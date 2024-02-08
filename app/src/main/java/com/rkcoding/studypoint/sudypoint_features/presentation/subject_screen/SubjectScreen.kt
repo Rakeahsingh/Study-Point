@@ -87,30 +87,6 @@ fun SubjectScreen(
 
 
 
-    val session = listOf(
-        Session(
-            sessionId = 0,
-            sessionSubjectId = 0,
-            relatedToSubject = "English",
-            date = 0L,
-            duration = 2
-        ),
-        Session(
-            sessionId = 1,
-            sessionSubjectId = 1,
-            relatedToSubject = "Hindi",
-            date = 0L,
-            duration = 4
-        ),
-        Session(
-            sessionId = 2,
-            sessionSubjectId = 2,
-            relatedToSubject = "Math",
-            date = 0L,
-            duration = 6
-        )
-    )
-
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val listState = rememberLazyListState()
     val isFabExtended by remember { derivedStateOf { listState.firstVisibleItemIndex == 0 } }
@@ -223,7 +199,7 @@ fun SubjectScreen(
 
             sessionList(
                 sectionTitle = "Recent Study Sessions",
-                session = session,
+                session = state.recentStudiesSession,
                 onDeleteIconClick = { session ->
                     viewModel.onEvent(SubjectEvent.OnSessionDeleteButtonClick(session))
                     deleteSessionDialog = true
